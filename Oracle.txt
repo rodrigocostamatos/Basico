@@ -1,0 +1,59 @@
+
+Be sure to include a reference to System.Data.OracleClient.dll, and place the following at the top of your code along with all the other using statements:
+
+
+
+// This really didn't need to be in its own method, but it makes it easier 
+// to make changes if you want to try different things such as
+// promting the user for credentials, etc.
+static private string GetConnectionString() 
+{ 
+   // To avoid storing the connection string in your code, 
+   // you can retrieve it from a configuration file. 
+   return "Data Source=myserver.server.com;Persist Security Info=True;" + 
+          "User ID=myUserID;Password=myPassword;Unicode=True"; 
+}
+
+// This will open the connection and query the database
+static private void ConnectAndQuery() 
+{ 
+  string connectionString = GetConnectionString(); 
+  using (OracleConnection connection = new OracleConnection()) 
+  { 
+    connection.ConnectionString = connectionString; 
+    connection.Open(); 
+    Console.WriteLine("State: {0}", connection.State); 
+    Console.WriteLine("ConnectionString: {0}", 
+                      connection.ConnectionString); 
+    
+    OracleCommand command = connection.CreateCommand(); 
+    string sql = "SELECT * FROM MYTABLE"; 
+    command.CommandText = sql; 
+ 
+    OracleDataReader reader = command.ExecuteReader(); 
+    while (reader.Read()) 
+    { 
+      string myField = (string)reader["MYFIELD"]; 
+      Console.WriteLine(myField); 
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+http://www.codeproject.com/Articles/18692/Instant-Oracle-Using-C
+
+
+http://docs.oracle.com/cd/B19306_01/win.102/b14307/featConnecting.htm
+
+
+http://www.connectionstrings.com/oracle-data-provider-for-net-odp-net/
+
+
+
